@@ -1,6 +1,7 @@
 import DataPegawai from "../models/DataPegawaiModel.js";
 import argon2 from "argon2";
 import path from "path";
+import { validateDesignation } from "../utils/designationValidation.js";
 
 // menampilkan semua data Pegawai
 export const getDataPegawai = async (req, res) => {
@@ -97,6 +98,16 @@ export const createDataPegawai = async (req, res) => {
         status, hak_akses
     } = req.body;
 
+    const designationValidation = validateDesignation(jabatan);
+    if (!designationValidation.valid) {
+        return res.status(400).json({
+            msg: designationValidation.error,
+            errors: {
+                jabatan: designationValidation.error
+            }
+        });
+    }
+
     if (password !== confPassword) {
         return res.status(400).json({ msg: "Password dan Konfirmasi Password Tidak Cocok" });
     }
@@ -166,6 +177,16 @@ export const updateDataPegawai = async (req, res) => {
         jabatan, tanggal_masuk,
         status, hak_akses
     } = req.body;
+
+    const designationValidation = validateDesignation(jabatan);
+    if (!designationValidation.valid) {
+        return res.status(400).json({
+            msg: designationValidation.error,
+            errors: {
+                jabatan: designationValidation.error
+            }
+        });
+    }
 
     try {
         await DataPegawai.update({

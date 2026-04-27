@@ -8,6 +8,14 @@ import axios from 'axios';
 import { getMe } from '../../../../../config/redux/action';
 import Swal from 'sweetalert2';
 
+const DESIGNATION_OPTIONS = [
+    'Mason',
+    'Electrician',
+    'Plumber',
+    'Supervisor',
+    'Helper',
+];
+
 const FormEditDataPegawai = () => {
     const [nik, setNik] = useState('');
     const [namaPegawai, setNamaPegawai] = useState('');
@@ -185,18 +193,25 @@ const FormEditDataPegawai = () => {
                                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                                     <div className='w-full xl:w-1/2'>
                                         <label className='mb-2.5 block text-black dark:text-white'>
-                                            Jabatan <span className='text-meta-1'>*</span>
+                                            Designation <span className='text-meta-1'>*</span>
                                         </label>
-                                        <input
-                                            type='text'
-                                            id='jabatan'
-                                            name='jabatan'
-                                            value={jabatan}
-                                            onChange={(e) => setJabatan(e.target.value)}
-                                            required={true}
-                                            placeholder='Masukkan jabatan'
-                                            className='w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
-                                        />
+                                        <div className='relative z-20 bg-transparent dark:bg-form-input'>
+                                            <select className='relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary'
+                                                id='jabatan'
+                                                name='jabatan'
+                                                value={jabatan}
+                                                onChange={(e) => setJabatan(e.target.value)}
+                                                required={true}
+                                            >
+                                                <option value='' disabled={true}>Pilih designation</option>
+                                                {DESIGNATION_OPTIONS.map((designation) => (
+                                                    <option key={designation} value={designation}>{designation}</option>
+                                                ))}
+                                            </select>
+                                            <span className='absolute top-1/2 right-4 z-30 -translate-y-1/2 text-2xl'>
+                                                <MdOutlineKeyboardArrowDown />
+                                            </span>
+                                        </div>
                                     </div>
                                     <div className='w-full xl:w-1/2'>
                                         <label className='mb-2.5 block text-black dark:text-white'>
