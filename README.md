@@ -22,7 +22,7 @@ In order to run this project locally, simply fork and clone the repository or do
 - Go to terminal -> New terminal (If you are using VS code)
 - Split your terminal into two (run the Frontend on one terminal and the server on the other terminal)
 
-In the first terminal
+In the first terminal ( For Frontend )
 
 ```
 $ cd Fronted
@@ -30,27 +30,7 @@ $ npm install (to install Frontend-side dependencies)
 $ npm run dev(to start the Frontend)
 ```
 
-In the second terminal
-
-- Create your MySQL database, which you will use as your database
-- Supply the following credentials
-
-```
-#  --- .env  ---
-
-APP_PORT =5000
-SESS_SECRET =
-
-```
-
-```
-# --- Terminal ---
-
-$ cd Backend
-$ npm install (to install Backend-side dependencies)
-$ npm start (to start the Backend)
-
-```
+In the second terminal ( For Backend and DB )
 
 ### Docker setup
 
@@ -58,6 +38,8 @@ This project uses MySQL, not PostgreSQL. If you want to run it in Docker, use th
 
 From the repository root:
 
+
+- First run 
 ```bash
 docker compose up --build
 ```
@@ -74,6 +56,34 @@ Default Docker credentials in `docker-compose.yml`:
 - password: `rootpassword`
 
 If you change those values, update [Backend/config/Database.js](Backend/config/Database.js) or set matching environment variables in the compose file.
+
+
+- Supply the following credentials
+
+```
+#  --- .env  ---
+
+APP_PORT =5000
+SESS_SECRET = 
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=db_penggajian3
+DB_USER=root
+DB_PASSWORD=< you can keep it from docker-compose.yml >
+DB_DIALECT=mysql
+
+```
+
+```
+# --- Terminal ---
+
+$ cd Backend
+$ npm install (to install Backend-side dependencies)
+$ npm start (to start the Backend)
+
+```
+
 
 ##  Key Features
 
