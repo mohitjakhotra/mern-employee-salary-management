@@ -1,0 +1,9 @@
+.git
+.gitignore
+node_modules
+Frontend/node_modules
+Frontend/dist
+Backend/node_modules
+Backend/request_test
+**/*.log
+**/.DS_Store

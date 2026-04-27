@@ -5,7 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx vitest run",
+    "lint": "node --check controllers/OvertimeController.js && node --check models/OvertimeModel.js && node --check routes/OvertimeRoute.js && node --check utils/overtimeValidation.js",
     "start": "nodemon index.js"
   },
   "keywords": [],

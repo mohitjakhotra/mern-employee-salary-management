@@ -20,6 +20,7 @@ import PrintPdfLaporanAbsensi from './PrintPdf/PrintPdfLaporanAbsensi';
 import SidebarAdmin from './Sidebar/SidebarAdmin';
 import SidebarPegawai from './Sidebar/SidebarPegawai';
 import SidebarLinkGroup from './Sidebar/SidebarLinkGroup';
+import OvertimeEntry from './OvertimeEntry/OvertimeEntry';
 
 export {
     Banner,
@@ -43,5 +44,6 @@ export {
     PrintPdfLaporanAbsensi,
     SidebarAdmin,
     SidebarPegawai,
-    SidebarLinkGroup
+    SidebarLinkGroup,
+    OvertimeEntry
 };

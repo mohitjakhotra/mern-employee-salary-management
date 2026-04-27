@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import SidebarLinkGroup from '../SidebarLinkGroup'
-import LogoSipeka from '../../../../assets/images/logo/logo-sipeka.png'
+import LogoSipeka from '../../../../Assets/images/logo/logo-sipeka.png'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { RxDashboard } from 'react-icons/rx'
 import { FiDatabase, FiSettings } from 'react-icons/fi'
@@ -263,6 +263,17 @@ const SidebarAdmin = ({ sidebarOpen, setSidebarOpen }) => {
                               }
                             >
                               Data Gaji
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to='/data-overtime'
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Data Overtime
                             </NavLink>
                           </li>
                         </ul>

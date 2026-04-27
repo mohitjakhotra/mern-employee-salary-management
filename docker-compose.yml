@@ -1,0 +1,45 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: sipeka-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: db_penggajian3
+      TZ: Asia/Jakarta
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./Backend/db/db_penggajian3.sql:/seed/db_penggajian3.sql:ro
+      - ./Backend/db/migrations/001_create_overtime_table.sql:/seed/001_create_overtime_table.sql:ro
+      - ./docker/mysql/init/01-import.sh:/docker-entrypoint-initdb.d/01-import.sh:ro
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: sipeka-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_PORT: 5000
+      SESS_SECRET: dev_secret_change_me
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: db_penggajian3
+      DB_USER: root
+      DB_PASSWORD: rootpassword
+      DB_DIALECT: mysql
+    ports:
+      - "5000:5000"
+
+volumes:
+  mysql_data:

@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test src/utils/__tests__/overtimeValidation.test.js src/config/redux/reducer/overtimeReducer/__tests__/overtimeReducer.test.js src/components/molecules/OvertimeEntry/__tests__/OvertimeEntry.test.js"
   },
   "dependencies": {
     "@emailjs/browser": "^3.11.0",

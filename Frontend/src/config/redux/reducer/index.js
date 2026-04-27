@@ -9,3 +9,4 @@ export * from './laporanAbsensiReducer';
 export * from './laporanGajiReducer';
 export * from './slipGajiReducer';
 export * from './ubahPasswordReducer';
+export * from './overtimeReducer';

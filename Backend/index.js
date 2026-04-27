@@ -9,12 +9,14 @@ import FileUpload from 'express-fileupload';
 
 import UserRoute from './routes/UserRoute.js';
 import AuthRoute from './routes/AuthRoute.js';
+import OvertimeRoute from './routes/OvertimeRoute.js';
 
 const app = express();
 
 const sessionStore = SequelizeStore(session.Store);
 const store = new sessionStore({
-    db: db
+    db: db,
+    tableName: 'sessions'
 });
 
 /* (async() => {
@@ -47,6 +49,7 @@ app.use(express.static("public"));
 
 app.use(UserRoute);
 app.use(AuthRoute);
+app.use(OvertimeRoute);
 
 // store.sync();
 

@@ -52,6 +52,29 @@ $ npm start (to start the Backend)
 
 ```
 
+### Docker setup
+
+This project uses MySQL, not PostgreSQL. If you want to run it in Docker, use the included MySQL 8.0 compose stack.
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+What this starts:
+- MySQL 8.0 with the `db_penggajian3` schema
+- the base database dump from `Backend/db/db_penggajian3.sql`
+- the overtime migration from `Backend/db/migrations/001_create_overtime_table.sql`
+- the backend service on port `5000`
+
+Default Docker credentials in `docker-compose.yml`:
+- database: `db_penggajian3`
+- user: `root`
+- password: `rootpassword`
+
+If you change those values, update [Backend/config/Database.js](Backend/config/Database.js) or set matching environment variables in the compose file.
+
 ##  Key Features
 
 - Login Admin

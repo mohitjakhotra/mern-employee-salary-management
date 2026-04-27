@@ -10,6 +10,7 @@ import laporanAbsensiReducer from './reducer/laporanAbsensiReducer';
 import laporanGajiReducer from './reducer/laporanGajiReducer';
 import slipGajiReducer from './reducer/slipGajiReducer';
 import ubahPasswordReducer from './reducer/ubahPasswordReducer';
+import overtimeReducer from './reducer/overtimeReducer';
 
 const store = configureStore({
     reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
         laporanGaji: laporanGajiReducer,
         slipGaji: slipGajiReducer,
         ubahPassword: ubahPasswordReducer,
+        overtime: overtimeReducer,
     },
 });
 
