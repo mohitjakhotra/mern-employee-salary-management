@@ -25,8 +25,23 @@ const FormAddDataJabatan = () => {
     const navigate = useNavigate();
     const { isError, user } = useSelector((state) => state.auth);
 
+    const hasNonPositiveValues = () => (
+        Number(gajiPokok) <= 0 || Number(tjTransport) <= 0 || Number(uangMakan) <= 0
+    );
+
     const submitDataJabatan = (e) => {
         e.preventDefault();
+
+        if (hasNonPositiveValues()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Nominal gaji harus lebih dari 0',
+                confirmButtonText: 'Ok',
+            });
+            return;
+        }
+
         const newFormData = new FormData();
         newFormData.append('nama_jabatan', namaJabatan);
         newFormData.append('gaji_pokok', gajiPokok);
@@ -126,6 +141,7 @@ const FormAddDataJabatan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='gajiPokok'
                                             name='gajiPokok'
                                             value={gajiPokok}
@@ -144,6 +160,7 @@ const FormAddDataJabatan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='tjTransport'
                                             name='tjTransport'
                                             value={tjTransport}
@@ -160,6 +177,7 @@ const FormAddDataJabatan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='uangMakan'
                                             name='uangMakan'
                                             value={uangMakan}

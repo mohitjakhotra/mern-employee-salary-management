@@ -4,6 +4,7 @@ import DataJabatan from "../models/DataJabatanModel.js";
 import PotonganGaji from "../models/PotonganGajiModel.js";
 import moment from "moment";
 import "moment/locale/id.js";
+import { validateNonNegativeFields } from "../utils/salaryValidation.js";
 
 // method untuk menampilkan semua Data Kehadiran
 export const viewDataKehadiran = async (req, res) => {
@@ -186,6 +187,17 @@ export const deleteDataKehadiran = async (req, res) => {
 export const createDataPotonganGaji = async (req, res) => {
   const { id, potongan, jml_potongan } = req.body;
   try {
+    const validationResult = validateNonNegativeFields(req.body, {
+      jml_potongan: "Jumlah Potongan",
+    });
+
+    if (!validationResult.valid) {
+      return res.status(400).json({
+        msg: "Jumlah potongan harus lebih dari 0",
+        errors: validationResult.errors,
+      });
+    }
+
     const nama_potongan = await PotonganGaji.findOne({
       where: {
         potongan: potongan,
@@ -236,6 +248,17 @@ export const viewDataPotonganByID = async (req, res) => {
 // method untuk update Data Potongan
 export const updateDataPotongan = async (req, res) => {
   try {
+    const validationResult = validateNonNegativeFields(req.body, {
+      jml_potongan: "Jumlah Potongan",
+    });
+
+    if (!validationResult.valid) {
+      return res.status(400).json({
+        msg: "Jumlah potongan harus lebih dari 0",
+        errors: validationResult.errors,
+      });
+    }
+
     await PotonganGaji.update(req.body, {
       where: {
         id: req.params.id,

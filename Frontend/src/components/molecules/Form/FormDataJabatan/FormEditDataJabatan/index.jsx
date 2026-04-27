@@ -20,6 +20,10 @@ const FormEditDataJabatan = () => {
     
     const { isError, user } = useSelector((state) => state.auth);
 
+    const hasNonPositiveValues = () => (
+        Number(gajiPokok) <= 0 || Number(tjTransport) <= 0 || Number(uangMakan) <= 0
+    );
+
     useEffect(() => {
         const getUserById = async () => {
             try {
@@ -39,6 +43,17 @@ const FormEditDataJabatan = () => {
 
     const updateDataJabatan = async (e) => {
         e.preventDefault();
+
+        if (hasNonPositiveValues()) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Nominal gaji harus lebih dari 0',
+                confirmButtonText: 'Ok',
+            });
+            return;
+        }
+
         try {
             const formData = new FormData();
             formData.append('nama_jabatan', namaJabatan);
@@ -118,6 +133,7 @@ const FormEditDataJabatan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='gajiPokok'
                                             name='gajiPokok'
                                             value={gajiPokok}
@@ -136,6 +152,7 @@ const FormEditDataJabatan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='tjTransport'
                                             name='tjTransport'
                                             value={tjTransport}
@@ -152,6 +169,7 @@ const FormEditDataJabatan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='uangMakan'
                                             name='uangMakan'
                                             value={uangMakan}

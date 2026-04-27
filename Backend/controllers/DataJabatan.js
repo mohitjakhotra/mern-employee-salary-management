@@ -1,6 +1,7 @@
 import DataJabatan from "../models/DataJabatanModel.js";
 import DataPegawai from "../models/DataPegawaiModel.js";
 import { Op } from "sequelize";
+import { validateNonNegativeFields } from "../utils/salaryValidation.js";
 
 // menampilkan semua data jabatan
 export const getDataJabatan = async (req, res) => {
@@ -57,6 +58,19 @@ export const createDataJabatan = async (req, res) => {
         id_jabatan, nama_jabatan, gaji_pokok, tj_transport, uang_makan
     } = req.body;
     try {
+        const validationResult = validateNonNegativeFields(req.body, {
+            gaji_pokok: "Gaji Pokok",
+            tj_transport: "Tunjangan Transport",
+            uang_makan: "Uang Makan"
+        });
+
+        if (!validationResult.valid) {
+            return res.status(400).json({
+                msg: "Nominal gaji harus lebih dari 0",
+                errors: validationResult.errors
+            });
+        }
+
         if (req.hak_akses === "admin") {
             await DataJabatan.create({
                 id_jabatan: id_jabatan,
@@ -94,6 +108,20 @@ export const updateDataJabatan = async (req, res) => {
         });
         if (!jabatan) return res.status(404).json({ msg: "Data tidak ditemukan" });
         const { nama_jabatan, gaji_pokok, tj_transport, uang_makan } = req.body;
+
+        const validationResult = validateNonNegativeFields(req.body, {
+            gaji_pokok: "Gaji Pokok",
+            tj_transport: "Tunjangan Transport",
+            uang_makan: "Uang Makan"
+        });
+
+        if (!validationResult.valid) {
+            return res.status(400).json({
+                msg: "Nominal gaji harus lebih dari 0",
+                errors: validationResult.errors
+            });
+        }
+
         if (req.hak_akses === "admin") {
             await DataJabatan.update({
                 nama_jabatan, gaji_pokok, tj_transport, uang_makan

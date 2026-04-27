@@ -23,6 +23,17 @@ const FormAddDataPotongan = () => {
 
     const submitDataPotongan = (e) => {
         e.preventDefault();
+
+        if (Number(jmlPotongan) <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: 'Jumlah potongan harus lebih dari 0',
+                confirmButtonText: 'Ok',
+            });
+            return;
+        }
+
         const newFormData = new FormData();
         newFormData.append('potongan', potongan);
         newFormData.append('jml_potongan', jmlPotongan);
@@ -121,6 +132,7 @@ const FormAddDataPotongan = () => {
                                         </label>
                                         <input
                                             type='number'
+                                            min='1'
                                             id='jmlPotongan'
                                             name='jmlPotongan'
                                             value={jmlPotongan}
