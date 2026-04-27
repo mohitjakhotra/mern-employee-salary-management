@@ -14,6 +14,17 @@ import { HiDownload } from 'react-icons/hi';
 
 const ITEMS_PER_PAGE = 4;
 
+const CSV_COLUMNS = [
+    { label: 'NIK', key: 'nik' },
+    { label: 'Nama Pegawai', key: 'nama_pegawai' },
+    { label: 'Jenis Kelamin', key: 'jenis_kelamin' },
+    { label: 'Designation', key: 'jabatan' },
+    { label: 'Tanggal Masuk', key: 'tanggal_masuk' },
+    { label: 'Status', key: 'status' },
+    { label: 'Hak Akses', key: 'hak_akses' },
+];
+
+
 const DataPegawai = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -22,18 +33,6 @@ const DataPegawai = () => {
     const navigate = useNavigate();
     const { isError, user } = useSelector((state) => state.auth);
     const { dataPegawai } = useSelector((state) => state.dataPegawai);
-
-    const CSV_COLUMNS = [
-        { label: 'NIK', key: 'nik' },
-        { label: 'Nama Pegawai', key: 'nama_pegawai' },
-        { label: 'Jenis Kelamin', key: 'jenis_kelamin' },
-        { label: 'Designation', key: 'jabatan' },
-        { label: 'Tanggal Masuk', key: 'tanggal_masuk' },
-        { label: 'Status', key: 'status' },
-        { label: 'Hak Akses', key: 'hak_akses' },
-    ];
-
-    const totalPages = Math.ceil(dataPegawai.length / ITEMS_PER_PAGE);
 
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -48,12 +47,10 @@ const DataPegawai = () => {
         );
     });
 
-    const handleExportCsv = () => {
-        const dataToExport = filteredDataPegawai.length > 0
-            ? filteredDataPegawai
-            : dataPegawai;
+    const totalPages = Math.ceil(filteredDataPegawai.length / ITEMS_PER_PAGE);
 
-        exportToCsv(dataToExport, CSV_COLUMNS, 'data-pegawai');
+    const handleExportCsv = () => {
+        exportToCsv(filteredDataPegawai, CSV_COLUMNS, 'data-pegawai');
     };
 
     const goToPrevPage = () => {
@@ -70,10 +67,12 @@ const DataPegawai = () => {
 
     const handleSearch = (event) => {
         setSearchKeyword(event.target.value);
+        setCurrentPage(1);
     };
 
     const handleFilterStatus = (event) => {
         setFilterStatus(event.target.value);
+        setCurrentPage(1);
     };
 
     const onDeletePegawai = (id) => {
@@ -177,7 +176,7 @@ const DataPegawai = () => {
 
                 <button
                     onClick={handleExportCsv}
-                    disabled={dataPegawai.length === 0}
+                    disabled={filteredDataPegawai.length === 0}
                     className="inline-flex items-center gap-2 rounded bg-success py-2 px-6 text-white font-medium hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <HiDownload className="text-lg" />
@@ -217,7 +216,65 @@ const DataPegawai = () => {
                     </div>
                 </div>
 
-                <div className="max-w-full overflow-x-auto py-4">
+                {/* Mobile card view */}
+                <div className="md:hidden space-y-3 py-4">
+                    {filteredDataPegawai.slice(startIndex, endIndex).map((data, index) => (
+                        <div key={data.id} className="rounded-lg border border-stroke bg-white dark:bg-boxdark dark:border-strokedark p-4 flex flex-col gap-3">
+                            {/* Top row: avatar + name + actions */}
+                            <div className="flex items-center gap-3">
+                                <div className="flex-shrink-0 h-11 w-11 rounded-full overflow-hidden bg-gray-2">
+                                    <img
+                                        src={`http://localhost:5000/images/${data.photo}`}
+                                        alt={`Foto ${data.nama_pegawai}`}
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-semibold text-black dark:text-white truncate">{data.nama_pegawai}</p>
+                                    <p className="text-sm text-body dark:text-bodydark">{data.jabatan}</p>
+                                </div>
+                                <div className="flex items-center gap-3 flex-shrink-0">
+                                    <Link to={`/data-pegawai/form-data-pegawai/edit/${data.id}`} aria-label="Edit pegawai">
+                                        <FaRegEdit className="text-primary text-lg" />
+                                    </Link>
+                                    <button onClick={() => onDeletePegawai(data.id)} aria-label="Hapus pegawai">
+                                        <BsTrash3 className="text-danger text-lg" />
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Detail grid — all remaining fields */}
+                            <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 pt-2 border-t border-stroke dark:border-strokedark text-sm">
+                                <div>
+                                    <span className="text-body dark:text-bodydark text-xs uppercase tracking-wide">NIK</span>
+                                    <p className="text-black dark:text-white font-medium">{data.nik}</p>
+                                </div>
+                                <div>
+                                    <span className="text-body dark:text-bodydark text-xs uppercase tracking-wide">Jenis Kelamin</span>
+                                    <p className="text-black dark:text-white font-medium">{data.jenis_kelamin}</p>
+                                </div>
+                                <div>
+                                    <span className="text-body dark:text-bodydark text-xs uppercase tracking-wide">Tanggal Masuk</span>
+                                    <p className="text-black dark:text-white font-medium">{data.tanggal_masuk}</p>
+                                </div>
+                                <div>
+                                    <span className="text-body dark:text-bodydark text-xs uppercase tracking-wide">Hak Akses</span>
+                                    <p className="text-black dark:text-white font-medium">{data.hak_akses}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium
+                ${data.status === 'Karyawan Tetap'
+                                            ? 'bg-success bg-opacity-10 text-success'
+                                            : 'bg-warning bg-opacity-10 text-warning'}`}>
+                                        {data.status}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                {/* Desktop table view  */}
+                <div className="hidden md:block max-w-full overflow-x-auto py-4">
                     <table className="w-full table-auto">
                         <thead>
                             <tr className="bg-gray-2 text-left dark:bg-meta-4">
