@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 import { deleteDataPegawai, getDataPegawai, getMe } from '../../../../config/redux/action';
 import { BiSearch } from 'react-icons/bi';
 import { MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight, MdOutlineKeyboardArrowDown } from 'react-icons/md';
+import { exportToCsv } from '../../../../utils/exportCsv';
+import { HiDownload } from 'react-icons/hi';
 
 const ITEMS_PER_PAGE = 4;
 
@@ -20,6 +22,16 @@ const DataPegawai = () => {
     const navigate = useNavigate();
     const { isError, user } = useSelector((state) => state.auth);
     const { dataPegawai } = useSelector((state) => state.dataPegawai);
+
+    const CSV_COLUMNS = [
+        { label: 'NIK', key: 'nik' },
+        { label: 'Nama Pegawai', key: 'nama_pegawai' },
+        { label: 'Jenis Kelamin', key: 'jenis_kelamin' },
+        { label: 'Designation', key: 'jabatan' },
+        { label: 'Tanggal Masuk', key: 'tanggal_masuk' },
+        { label: 'Status', key: 'status' },
+        { label: 'Hak Akses', key: 'hak_akses' },
+    ];
 
     const totalPages = Math.ceil(dataPegawai.length / ITEMS_PER_PAGE);
 
@@ -35,6 +47,14 @@ const DataPegawai = () => {
             (filterStatus === '' || status.toLowerCase() === statusKeyword)
         );
     });
+
+    const handleExportCsv = () => {
+        const dataToExport = filteredDataPegawai.length > 0
+            ? filteredDataPegawai
+            : dataPegawai;
+
+        exportToCsv(dataToExport, CSV_COLUMNS, 'data-pegawai');
+    };
 
     const goToPrevPage = () => {
         if (currentPage > 1) {
@@ -147,14 +167,24 @@ const DataPegawai = () => {
     return (
         <Layout>
             <Breadcrumb pageName="Data Pegawai" />
-            <Link to="/data-pegawai/form-data-pegawai/add">
-                <ButtonOne>
-                    <span>Tambah Pegawai</span>
-                    <span>
-                        <FaPlus />
-                    </span>
-                </ButtonOne>
-            </Link>
+            <div className="flex items-center gap-3 mt-4">
+                <Link to="/data-pegawai/form-data-pegawai/add">
+                    <ButtonOne>
+                        <span>Tambah Pegawai</span>
+                        <span><FaPlus /></span>
+                    </ButtonOne>
+                </Link>
+
+                <button
+                    onClick={handleExportCsv}
+                    disabled={dataPegawai.length === 0}
+                    className="inline-flex items-center gap-2 rounded bg-success py-2 px-6 text-white font-medium hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <HiDownload className="text-lg" />
+                    <span>Export CSV</span>
+                </button>
+            </div>
+
             <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1 mt-6">
                 <div className="flex justify-between items-center mt-4 flex-col md:flex-row md:justify-between">
                     <div className="relative flex-1 md:mr-2 mb-4 md:mb-0">
