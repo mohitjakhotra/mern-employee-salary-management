@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import LogoPt from "../../../../Assets/images/logo/logo-dark.svg";
 import LogoSipeka from "../../../../Assets/images/logo/logo-sipeka.png";
 import { useReactToPrint } from "react-to-print";
@@ -22,11 +22,15 @@ const PrintPdfSlipGaji = () => {
     const year = searchParams.get("year");
     const name = searchParams.get("name");
 
-    const [bulan, setBulan] = useState("");
-    const [tahun, setTahun] = useState("");
-
     const { isError, user } = useSelector((state) => state.auth);
     const { dataSlipGaji } = useSelector((state) => state.slipGaji);
+
+    const formatDateDDMMYYYY = (date = new Date()) => {
+        const day = String(date.getDate()).padStart(2, "0");
+        const monthNumber = String(date.getMonth() + 1).padStart(2, "0");
+        const yearNumber = date.getFullYear();
+        return `${day}/${monthNumber}/${yearNumber}`;
+    };
 
     const getDataByYear = async (selectedYear) => {
         dispatch(fetchSlipGajiByYear(selectedYear));
@@ -66,18 +70,6 @@ const PrintPdfSlipGaji = () => {
         }
     }, [isError, user, navigate, handlePrint]);
 
-    useEffect(() => {
-        const today = new Date();
-        const monthNames = [
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-        ];
-        const month = monthNames[today.getMonth()];
-        const year = today.getFullYear();
-        setBulan(month);
-        setTahun(year);
-    }, []);
-
     return (
         <>
             <div className="flex flex-col md:flex-row w-full gap-3 text-center p-6 bg-white dark:bg-meta-4">
@@ -96,6 +88,7 @@ const PrintPdfSlipGaji = () => {
             </div >
             <div ref={componentRef} >
                 {dataSlipGaji.map((data, index) => {
+                    const printedDate = formatDateDDMMYYYY();
                     return (
                         <div key={index} className="w-200% h-100% p-10 bg-white dark:bg-meta-4">
                             <div className="flex items-center gap-24 object-cover border-b-4 border-black dark:border-white">
@@ -231,7 +224,7 @@ const PrintPdfSlipGaji = () => {
                                     <span>{name}</span>
                                 </div>
                                 <div className="font-medium text-black dark:text-white">
-                                    <span className="text-right">Karawang, {`${new Date().getDate()} ${bulan} ${tahun}`}</span>
+                                    <span className="text-right">Karawang, {printedDate}</span>
                                     <br />
                                     <span>Finance</span>
                                     <br />
@@ -240,7 +233,7 @@ const PrintPdfSlipGaji = () => {
                                 </div>
                             </div>
                             <div className="italic text-black dark:text-white mt-30">
-                                Dicetak Pada : {`${new Date().getDate()} ${bulan} ${tahun}`}
+                                Dicetak Pada : {printedDate}
                             </div>
                         </div>
                     );
